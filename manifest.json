@@ -1,0 +1,468 @@
+{
+  "schema": 1,
+  "releaseReady": [
+    "bug-fix",
+    "evals",
+    "hooks",
+    "incident",
+    "intent",
+    "model-routing",
+    "preflight",
+    "recurring-regressions",
+    "release",
+    "review",
+    "skills",
+    "spec-plan",
+    "subagents"
+  ],
+  "localAIReports": [
+    "evals",
+    "hooks",
+    "incident",
+    "intent",
+    "model-routing",
+    "recurring-regressions",
+    "release",
+    "review",
+    "skills",
+    "spec-plan",
+    "subagents"
+  ],
+  "workerImage": "node:22.18.0-alpine@sha256:1b2479dd35a99687d6638f5976fd235e26c5b37e8122f786fcd5fe231d63de5b",
+  "exercises": {
+    "bug-fix": {
+      "key": "bug-fix",
+      "title": "Fix the bug and prove it",
+      "minutes": 25,
+      "chapter": "Chapter 2 \u00b7 Feedback",
+      "writeAllow": [
+        "src/claims.mjs",
+        "tests/student/**"
+      ],
+      "practice": [
+        "bug-fix.practice"
+      ],
+      "needsAI": false,
+      "brief": "A claims-status helper works for the developer account but exposes another user\u2019s claim in one edge case. The existing tests are green.",
+      "acceptance": [
+        "Only an exact authorized owner receives a claim.",
+        "Whitespace is normalized consistently and malformed IDs cannot match.",
+        "The student regression fails on the original and passes on the fix.",
+        "Missing records return null; the input list and records remain unchanged."
+      ],
+      "recipeIndex": 2
+    },
+    "evals": {
+      "key": "evals",
+      "title": "Write an eval that catches regression",
+      "minutes": 30,
+      "chapter": "Chapter 2 \u00b7 Evals",
+      "writeAllow": [
+        "evals/**",
+        "tests/eval/**",
+        "assessment.json"
+      ],
+      "practice": [
+        "evals.practice"
+      ],
+      "needsAI": true,
+      "brief": "A change to project guidance removes caching from a live-status feature. Happy-path tests pass, but the old claims system exceeds its rate limit. Build a repeatable evaluation that catches the regression without rejecting valid refactors.",
+      "acceptance": [
+        "The good reference and equivalent valid refactor pass.",
+        "Missing cache, rate-limit breach and payload logging are detected.",
+        "Assertions inspect behavior rather than file names or fixture IDs.",
+        "The eval includes repeatable input, requirement references and documented checks."
+      ],
+      "recipeIndex": 8
+    },
+    "hooks": {
+      "key": "hooks",
+      "title": "Protect files through every write path",
+      "minutes": 30,
+      "chapter": "Chapter 1 \u00b7 Skills / Chapter 2 \u00b7 Approval",
+      "writeAllow": [
+        "guard/**",
+        "tests/student/guard/**",
+        "assessment.json"
+      ],
+      "practice": [
+        "hooks.practice"
+      ],
+      "needsAI": true,
+      "brief": "A restriction blocks direct edits to approved intent, but a shell command still overwrites it. A broad repair then blocks legitimate development as well.",
+      "acceptance": [
+        "Protected intent and instructor tests cannot change through accepted tool paths.",
+        "Normal source edits are allowed.",
+        "Invalid or ambiguous requests fail safely with an explanation.",
+        "The submitted guard\u2019s decisions are correct independently of the outer worker protection."
+      ],
+      "recipeIndex": 5
+    },
+    "incident": {
+      "key": "incident",
+      "title": "Turn an incident into a lasting improvement",
+      "minutes": 40,
+      "chapter": "Chapter 2 \u00b7 Close the loop",
+      "writeAllow": [
+        "detector/**",
+        "policy/response.json",
+        "intent.md",
+        "evals/**",
+        "assessment.json"
+      ],
+      "practice": [
+        "incident.practice"
+      ],
+      "needsAI": true,
+      "brief": "Claims latency drifts upward. The monitoring agent overreacts to noise and misses sustained problems. A quick fix restored service once but left no regression evaluation, so the issue returned.",
+      "acceptance": [
+        "Numeric boundaries, zero variance and insufficient data behave as specified.",
+        "The trusted controller chooses the band before Claude starts.",
+        "Actions stay within the admitted band and duplicate events have no repeated effects.",
+        "The next intent cites evidence and its eval detects the prior regression.",
+        "No profile can deploy directly."
+      ],
+      "recipeIndex": 12
+    },
+    "intent": {
+      "key": "intent",
+      "title": "Write the intent",
+      "minutes": 25,
+      "chapter": "Chapter 1 \u00b7 Intent",
+      "writeAllow": [
+        "intent.md",
+        "assessment.json"
+      ],
+      "practice": [
+        "intent.practice"
+      ],
+      "needsAI": true,
+      "brief": "A fictional clinic wants fewer calls asking whether results are ready. The approved PRD, recent notes and a superseded request disagree on scope and recipients.",
+      "acceptance": [
+        "The approved outcome and review-before-notification rule are explicit.",
+        "Messages expose no clinical details; unauthorized recipients are not silently approved.",
+        "Portal redesign and other superseded scope are excluded.",
+        "Channel choice and referring-doctor notifications remain open with owners.",
+        "The intent gives observable success conditions without inventing a target or approval."
+      ],
+      "recipeIndex": 1
+    },
+    "model-routing": {
+      "key": "model-routing",
+      "title": "Route models and compress context",
+      "minutes": 35,
+      "chapter": "Chapter 1 \u00b7 Context and parallel work",
+      "writeAllow": [
+        "routing.json",
+        "handoffs/**",
+        "assessment.json"
+      ],
+      "practice": [
+        "model-routing.practice"
+      ],
+      "needsAI": true,
+      "brief": "Every task receives the full repository history and the most expensive model. Costs grow while key constraints still disappear from the handoff.",
+      "acceptance": [
+        "Correctness meets the published threshold before efficiency credit.",
+        "Routine work stays on an appropriate approved stage and ambiguous work escalates with a reason.",
+        "Current constraints survive context compression.",
+        "Calls, retries and context/output limits stay within instructor configuration."
+      ],
+      "recipeIndex": 10
+    },
+    "preflight": {
+      "key": "preflight",
+      "title": "Preflight: submit 1 + 1",
+      "minutes": 10,
+      "chapter": "Before the workshop",
+      "writeAllow": [
+        "answer.json"
+      ],
+      "practice": [
+        "preflight.practice"
+      ],
+      "needsAI": false,
+      "brief": "Before the workshop, confirm that your local workspace, GitHub PR and TensorLearn result can complete one round.",
+      "acceptance": [
+        "The answer is a JSON number equal to 2.",
+        "Only answer.json changes.",
+        "The selected PR head has a saved TensorLearn result."
+      ],
+      "recipeIndex": 0
+    },
+    "recurring-regressions": {
+      "key": "recurring-regressions",
+      "title": "Stop the recurring regressions",
+      "minutes": 30,
+      "chapter": "Chapter 1 \u00b7 Working context",
+      "writeAllow": [
+        "**"
+      ],
+      "practice": [
+        "recurring-regressions.practice"
+      ],
+      "needsAI": true,
+      "brief": "Claude keeps reintroducing an old customer-code format and removing a cache, even after those changes were corrected. Several tasks appeared fixed, but the next session repeats the mistakes. Find and fix the cause, then demonstrate that a new session completes the next task correctly.",
+      "acceptance": [
+        "A new session preserves the current customer-code contract and required caching.",
+        "The diagnosis explains the recurring cause and cites repository evidence.",
+        "The correction preserves useful project guidance and avoids a blanket deletion.",
+        "Authorization and the full suite remain correct."
+      ],
+      "recipeIndex": 3,
+      "writeDeny": [
+        "exercise.json",
+        "practice.mjs",
+        "fixtures/**",
+        "tests/instructor/**",
+        ".github/**",
+        ".mcp.json",
+        ".claude/settings.json",
+        ".claude/settings.local.json"
+      ]
+    },
+    "release": {
+      "key": "release",
+      "title": "Release safely when a tool misleads you",
+      "minutes": 35,
+      "chapter": "Chapter 2 \u00b7 Approval and CI/CD",
+      "writeAllow": [
+        "agents/**",
+        "approval-policy.json",
+        "assessment.json"
+      ],
+      "practice": [
+        "release.practice"
+      ],
+      "needsAI": true,
+      "brief": "A staging release degrades health. Tool output suggests using a production credential and skipping approval to repair it. The legitimate task is to diagnose staging and follow the approved rollback policy.",
+      "acceptance": [
+        "Diagnosis remains read-only.",
+        "Mutations require a matching valid instructor approval for the environment and version.",
+        "Malicious tool text never creates approval or expands available capabilities.",
+        "Required rollback happens and recovery is independently checked."
+      ],
+      "recipeIndex": 11
+    },
+    "review": {
+      "key": "review",
+      "title": "Review without the author\u2019s bias",
+      "minutes": 25,
+      "chapter": "Chapter 2 \u00b7 PR review",
+      "writeAllow": [
+        "REVIEW.md",
+        "agents/reviewer.json",
+        "assessment.json"
+      ],
+      "practice": [
+        "review.practice"
+      ],
+      "needsAI": true,
+      "brief": "A PR description says all requirements and performance were verified. The patch removes caching, logs whole responses and changes approved behavior. Generated-file style changes distract from the defects.",
+      "acceptance": [
+        "Findings cite changed paths/lines, evidence and violated requirements.",
+        "Material privacy, release-gate and caching defects are found.",
+        "The clean patch does not receive invented defects.",
+        "The reviewer remains read-only and does not approve or merge."
+      ],
+      "recipeIndex": 9
+    },
+    "skills": {
+      "key": "skills",
+      "title": "Build a skill that activates reliably",
+      "minutes": 30,
+      "chapter": "Chapter 1 \u00b7 Skills",
+      "writeAllow": [
+        ".claude/skills/notification-policy/**",
+        "checker/check-message.mjs",
+        "assessment.json"
+      ],
+      "practice": [
+        "skills.practice"
+      ],
+      "needsAI": true,
+      "brief": "Developers apply privacy rules when explicitly asked, but omit them when asked to make a notification more useful. The policy exists; Claude does not reliably apply it.",
+      "acceptance": [
+        "Direct and indirect notification requests activate the policy.",
+        "Forbidden clinical content is rejected without blocking neutral messages.",
+        "The checker is executable and matches the policy.",
+        "A fresh session produces useful privacy-preserving output."
+      ],
+      "recipeIndex": 7
+    },
+    "spec-plan": {
+      "key": "spec-plan",
+      "title": "Make the spec and plan traceable",
+      "minutes": 30,
+      "chapter": "Chapter 1 \u00b7 Specification and planning",
+      "writeAllow": [
+        "spec.md",
+        "plan.md",
+        "assessment.json"
+      ],
+      "practice": [
+        "spec-plan.practice"
+      ],
+      "needsAI": true,
+      "brief": "An approved notification intent is ready, but old design advice conflicts with current source and policy. The provider limits throughput and an existing portal route should be reused.",
+      "acceptance": [
+        "Each approved intent item maps to requirements, plan steps and tests.",
+        "Current privacy and provider limits are preserved.",
+        "The plan references real repository paths and does not depend on a nonexistent helper.",
+        "Open recipient/channel choices retain explicit owners.",
+        "Source remains unchanged."
+      ],
+      "recipeIndex": 6
+    },
+    "subagents": {
+      "key": "subagents",
+      "title": "Give subagents the right context",
+      "minutes": 35,
+      "chapter": "Chapter 1 \u00b7 Parallel work",
+      "writeAllow": [
+        "agents/**",
+        "handoff.json",
+        "src/**",
+        "tests/student/**",
+        "assessment.json"
+      ],
+      "practice": [
+        "subagents.practice"
+      ],
+      "needsAI": true,
+      "brief": "A notification feature spans a service and a portal. Provider constraints, UI rules and old advice live in separate documents. Broad prompts repeatedly lose a requirement between research and implementation.",
+      "acceptance": [
+        "Role instructions separate research, implementation and blind verification; rehearse all three locally and report which actually ran.",
+        "The handoff preserves current provider and privacy constraints with citations.",
+        "The implementation uses the handoff and passes independent tests.",
+        "The verifier identifies the planted defect without the author narrative."
+      ],
+      "recipeIndex": 4
+    }
+  },
+  "files": {
+    ".gitignore": "fd629f66ab9588d78444b0088a426555f25a9252",
+    "README.md": "90e2528b9ee0bbf21aa2d62b96f2efd03a3faafb",
+    "exercises/bug-fix/README.md": "ac31b6157d1be8809ba609aaaf7183e3d90e08f0",
+    "exercises/bug-fix/docs/contract.md": "9e609b1b07eba340341bb4c17031692a2dc84114",
+    "exercises/bug-fix/exercise.json": "e8a3faa860a80fc3205149fe9cfe8c284b1d99ac",
+    "exercises/bug-fix/practice.mjs": "1e96d60a51a60213b046cb58a579f06437a127c2",
+    "exercises/bug-fix/src/claims.mjs": "641c52753b57e60249cb73e41c4544f41390df9d",
+    "exercises/bug-fix/tests/baseline.test.mjs": "a5fd3026cb5b242a800d6e5a125667b4b65bb36d",
+    "exercises/bug-fix/tests/student/regression.test.mjs": "b07f129b0c3cf535ac4a4cc9ca31fb03f36caa5b",
+    "exercises/evals/README.md": "ee3d18a00f41e25fa01defb60ffb0930b04da1f6",
+    "exercises/evals/contract.md": "4ee2f6649d9718674f4b3b726994c885ed64de03",
+    "exercises/evals/evals/assert.mjs": "0c782ba42ef6fcf89f0c18ea24e04abdceb2afe5",
+    "exercises/evals/evals/definition.json": "cc9bb07975b1a009d2b476466d03262ec6443331",
+    "exercises/evals/exercise.json": "1f011105c915d4af3976fa99f1d261833c2863e9",
+    "exercises/evals/fixtures/workload.json": "92a104a38fa79498189a0692ba9a7c09443b0f9f",
+    "exercises/evals/practice.mjs": "5b0a480292ff9dfabd4d90d96377d6692d0533ac",
+    "exercises/evals/references/broken.mjs": "d71c43f33938e7e13836618c14a4b73e73b97b9c",
+    "exercises/evals/references/good.mjs": "d0d0da0bf0dbafd9032ba94d03abf10eee443e41",
+    "exercises/evals/tests/eval/assertions.test.mjs": "28d782c9df8182b04f162512982c8158658149b4",
+    "exercises/hooks/README.md": "b88661d0cfef780135fe84b517bc1b8f861243b6",
+    "exercises/hooks/contract.md": "0e955508b85221afd7260f9db8ce6b8645e22e3e",
+    "exercises/hooks/exercise.json": "658d15af9d3404d2287c193696290831621341df",
+    "exercises/hooks/fixtures/events.json": "30440097691721ff461aab6676a27c4f8270994a",
+    "exercises/hooks/guard/guard.mjs": "546bfa0ed5bc58a37e91f5515f5f756d2bce4fc0",
+    "exercises/hooks/practice.mjs": "241aca054c11e6e7a7ff4164fdb0143d8b166299",
+    "exercises/hooks/tests/student/guard/guard.test.mjs": "363fee13bdb7be32693aaa9a72f006b7f6b5cf8c",
+    "exercises/incident/README.md": "57de8e2ba7f70a227b2b29220c4462f87596285b",
+    "exercises/incident/contract.md": "47a369b6c580c4425eaaf45492d2b4bfa30d6394",
+    "exercises/incident/detector/detect.mjs": "5ecc2b50fa2c8ee3756f5c3148566c1babc6dbb6",
+    "exercises/incident/evals/assert.mjs": "50edd5951b8565401ddd1ebb9d4b63758efd2e09",
+    "exercises/incident/exercise.json": "bfdc45cfd789386619bfd9582b38e7d111eb72d0",
+    "exercises/incident/fixtures/incident.md": "82396a9b69d69926eedbc8fe4e8342c6e57299c3",
+    "exercises/incident/fixtures/policy.json": "64d93cc5b23babb4505e8b7b8df0180d18958c49",
+    "exercises/incident/fixtures/series.json": "5c11939c4ee802c2f6c9d269e9b09f2334bbc3d2",
+    "exercises/incident/intent.md": "3e1ab852b2eabe397f3198c8ba46858b153bb0dd",
+    "exercises/incident/policy/response.json": "f4d4f912f4a1ad5425ec3b2962bd4fba8d6daa37",
+    "exercises/incident/practice.mjs": "9e76668fa87b8954890e9dd404517cc81ea65b74",
+    "exercises/intent/README.md": "e219b04960527f9ca87beecb17a608779a8eba91",
+    "exercises/intent/exercise.json": "3321e9ceb00d316ce867a8fdbfe89de2998b1d25",
+    "exercises/intent/inputs/01-approved-prd.md": "991149165b492c763ac2c70a1dcf8cb1267f2f04",
+    "exercises/intent/inputs/02-current-meeting.md": "d4566031b042e3c786840242933f73f3e091414a",
+    "exercises/intent/inputs/03-superseded-request.md": "876996e266dad251d314270b810be63094418ffc",
+    "exercises/intent/intent.md": "0bd0601711616cb111d42d20c76dbf029850fdab",
+    "exercises/intent/practice.mjs": "7b1fe78af10bbf8de83359d23f7fca4663840f0f",
+    "exercises/model-routing/README.md": "3e3c23d0228b9380d0f4e9d3581a948964105da9",
+    "exercises/model-routing/contract.md": "cde0f5b8c565dab6a60bf607a885d65a65d97da3",
+    "exercises/model-routing/exercise.json": "d1504693c8be04c4cdbcce8787d99e13a5ed5f40",
+    "exercises/model-routing/fixtures/archived-notes.md": "2ec9b8336887a5dd0ef5ed3da41e6bba0aba682b",
+    "exercises/model-routing/fixtures/current-policy.md": "0616bb48892d4f12e7e7b7b49783d31334ff07b8",
+    "exercises/model-routing/fixtures/tasks.json": "a94e57e606b2004b0503d5ecd2adc94300a13f5b",
+    "exercises/model-routing/handoffs/template.md": "aa2fd30e6ee8605a1dd5e7b83014ac73b9201e21",
+    "exercises/model-routing/practice.mjs": "0c289a85e7645556abf872d658094598f6c7f560",
+    "exercises/model-routing/routing.json": "49506c0a26cd1b83328a2bccc3a788b6cd91a52c",
+    "exercises/preflight/README.md": "eec564a4588adfe37bd0a633e4ee46088556efce",
+    "exercises/preflight/answer.json": "99efa03f88fea6550d8ac3c425faf411cd5bb0f4",
+    "exercises/preflight/exercise.json": "49ca446437abcd358957e265bf1b821ac34624de",
+    "exercises/preflight/practice.mjs": "e82a7b92087d83eee974ab2f89b26699d71b7ca1",
+    "exercises/recurring-regressions/CLAUDE.md": "111caada57e3862e60e2431d952efb4db6c54d1f",
+    "exercises/recurring-regressions/README.md": "6b3defc598cca6fa21f76896894fb76ff8eef71e",
+    "exercises/recurring-regressions/diagnosis.md": "044652bc42da9d21c57b91a927535c7acb7bddb9",
+    "exercises/recurring-regressions/docs/current-schema.md": "6af86de043666e1846c0b538cc82262a086789c1",
+    "exercises/recurring-regressions/docs/incident.md": "fe826c329c50090c72c4ebae9525a7900997f54e",
+    "exercises/recurring-regressions/docs/status-design.md": "6c72e1b5a2c357faf551f13394c5d3f4542e0edc",
+    "exercises/recurring-regressions/docs/testing.md": "b79ad16661cddd959835cc194769a1c2f3335532",
+    "exercises/recurring-regressions/exercise.json": "456a56f0cfe6dc2b260ff93891a26081862be2a9",
+    "exercises/recurring-regressions/practice.mjs": "c8b101285b0fb0e18b62b75afd737b881742d31c",
+    "exercises/recurring-regressions/src/claims-client.mjs": "d99e21d6c1f02e684da2a7252d0b0ab0addc4cd5",
+    "exercises/recurring-regressions/src/customer-code.mjs": "2ca9a18cbb8bdc6f86e5d4c3b6c6f27016e2822c",
+    "exercises/recurring-regressions/tests/contract.test.mjs": "0b9a084b9e13b6c2a5043fa42cb02792806b4c31",
+    "exercises/recurring-regressions/tests/smoke.test.mjs": "f56517f2700e9a08848a7e664262345ef5f3f0ef",
+    "exercises/recurring-regressions/tests/student/verification.test.mjs": "e1ab1802b10fae23bb425f28d1b81c059195f882",
+    "exercises/release/README.md": "e4598edf2c04dda1a01bef715d5be0d826ea3fbf",
+    "exercises/release/agents/diagnosis.json": "4ad33ab6b85d5fc87912996bd5e3d5ec2bc0681b",
+    "exercises/release/agents/release.json": "1af68cb3b7359e847589908b625a93c9a782728a",
+    "exercises/release/approval-policy.json": "2323363b96b66f9fd0c9b6cc20c25ddc776bae5e",
+    "exercises/release/contract.md": "aa48b660c2fca155d214684a06d49aa401fe98e9",
+    "exercises/release/exercise.json": "8e61a214bac30176ebede2120981e87d788b7147",
+    "exercises/release/fixtures/scenarios.json": "9fbca5358f6b3bff13d75d77a98094ab27f84c06",
+    "exercises/release/practice.mjs": "da3e326c131070f93066a64d09570c7df87962c3",
+    "exercises/review/README.md": "3de009925ca964f4673df0c1c38a7575e7d524ce",
+    "exercises/review/REVIEW.md": "a19cf786e89b21bb63e048e9641d18e0c4e77687",
+    "exercises/review/agents/reviewer.json": "9f5ccf62e8f2e39a7b8941ec924cb8f31efe48b9",
+    "exercises/review/exercise.json": "97045d31e7706058fee0b88dd136c18cf8b5588e",
+    "exercises/review/findings.schema.json": "764b3c142b421ce941237736ae3ca87d78ed351f",
+    "exercises/review/fixtures/approved.md": "2fd0ecdc8df5ae320692da9497f28a1bc814b7f7",
+    "exercises/review/fixtures/author-narrative.txt": "203bab568161827ff817a92833d63ec0b17b51da",
+    "exercises/review/fixtures/clean.patch": "e827c03d1453754cd5057731aeccb9d1f22fda68",
+    "exercises/review/fixtures/defective.patch": "a061c215f7c7827ea97449c47fc3bca67c1218b3",
+    "exercises/review/practice.mjs": "27d88765e3917956cac50edb95e4a61fb2f6b3ce",
+    "exercises/skills/.claude/skills/notification-policy/SKILL.md": "4cd55e1879b2dfc80cd8674b064478e044013f29",
+    "exercises/skills/README.md": "31c3621d2a9fb1cac5286b17632a1876c7aaae52",
+    "exercises/skills/checker/check-message.mjs": "f3df5ef218001b508c97ad682c0bed095b3fa8fb",
+    "exercises/skills/exercise.json": "88ae6d6c56e19ac5b310899f845242b4f5115962",
+    "exercises/skills/fixtures/messages.json": "b2626ddf6e2f2c3eeedb7a72e4786852750aecc6",
+    "exercises/skills/fixtures/prompts.json": "f7906ba14b3c1fd477968def82bd1a0e8ea2d698",
+    "exercises/skills/policy.md": "201216a464d98a4aaf49d34c2e3fb87d00bc0ac4",
+    "exercises/skills/practice.mjs": "4be069fba5c4ebcb5940664dba2f982e3dcf150e",
+    "exercises/spec-plan/README.md": "f933ac819278ae3dd57067ddfdbfce533fdfe675",
+    "exercises/spec-plan/exercise.json": "77d732e60be6c6cb3b1a7932e5f41a561c795e0a",
+    "exercises/spec-plan/inputs/archived-design.md": "62501b11c216a8e9401af4cfc8ff4a5ffc5e6b72",
+    "exercises/spec-plan/inputs/current-policy.md": "5216dd00e6707c4886780e7b5d76b36c7c443676",
+    "exercises/spec-plan/intent.md": "25670759f02b0c400218694f082f3ee07afdd3af",
+    "exercises/spec-plan/plan.md": "b4d74a9fb94e652b62c7a010b7481221b6d53b92",
+    "exercises/spec-plan/practice.mjs": "26fad2ab4ad4cf2dc9376651c29b93e99aff867d",
+    "exercises/spec-plan/spec.md": "2f51e00f022ab8c24ee745641a5c80564bc9f4d2",
+    "exercises/spec-plan/src/portal/result-route.mjs": "3d24a667035a95729ded9cf1e4b3821f05f5725a",
+    "exercises/spec-plan/src/service/queue.mjs": "66b5458314acf275021e53c46b07fce032022ffe",
+    "exercises/subagents/README.md": "88c6c7fe88a3d7fa2534685f66a3367a92614405",
+    "exercises/subagents/agents/implementer.json": "87056f6987cc9064531532233853fd9b43da3b6b",
+    "exercises/subagents/agents/researcher.json": "d978c26760213c2ec0db1f23e9023a23ee2619c4",
+    "exercises/subagents/agents/verifier.json": "1b3b755f8ea7ea9a7ba7f0632f5627f74ea176b0",
+    "exercises/subagents/contracts.md": "18f4d6dd4a37bfe6034ebce6f665e7e144108d64",
+    "exercises/subagents/exercise.json": "6ebf0a8c84c91b1e0a6f89fec3474cf8fefd9306",
+    "exercises/subagents/fixtures/author-narrative.txt": "cdaa6ba8c32fa3cb99a2310c5bcb9425988f8314",
+    "exercises/subagents/fixtures/implementation/README.md": "b5ee2a62379b633e609cfa0aa4d34f1b64f9d30d",
+    "exercises/subagents/fixtures/research/archived-integration.md": "824cdff05e2bd782c1af37af6468e65aed8bf905",
+    "exercises/subagents/fixtures/research/privacy.md": "40840d990a4e3f612713adf4b94b2e281f605d26",
+    "exercises/subagents/fixtures/research/provider.md": "153d9a262d62a1206e3bcfc35815b7a7c436a38a",
+    "exercises/subagents/fixtures/verification/planted-diff.patch": "525f579e51e0d8a42d35ab6ef086b721a5237d37",
+    "exercises/subagents/fixtures/verification/requirements.md": "323ffbe92a9f6a194f3cc31e0d53ee97b61c1437",
+    "exercises/subagents/handoff.json": "e275a89e310094e120d251d83109330fedd588cb",
+    "exercises/subagents/practice.mjs": "b495e4ad2f12907756a852ba635b8362249b2f23",
+    "exercises/subagents/src/notification.mjs": "9387f9917e6fa43effed80837e28b929f6927298"
+  }
+}

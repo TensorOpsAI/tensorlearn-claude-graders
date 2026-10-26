@@ -1,0 +1,9 @@
+{
+  "aliases": {},
+  "maxCalls": 6,
+  "maxInputTokens": 8000,
+  "maxOutputTokens": 2000,
+  "maxRetries": 1,
+  "allowEscalation": true,
+  "clientBudgetTargetUsd": null
+}

@@ -3,16 +3,27 @@
 Instructor-owned runtime and immutable GitHub Actions grader for the public
 `TensorOpsAI/tensorlearn-claude-labs` exercise templates.
 
-## Release status
+## Assessment model
 
-**Preflight** and **bug-fix** have implemented deterministic assessments. Preflight
-reads the selected PR's immutable GitHub tree/blobs and checks the answer as data.
-It never checks out or executes learner code. Bug-fix compares candidate function outputs in a no-network Docker worker against instructor expectations, and runs the same student tests against original and submitted source. This verifies differential behavior, not authorship or when the tests were written. Other exercises are **drafts**:
-their starter materials and local authoring profiles do not establish completed
-behavioral grading. Their workflows fail explicitly without a score.
+AI work runs locally through each learner’s existing Claude login. GitHub Actions
+receives no AI provider credential and makes no AI calls.
 
-See `VALIDATION.md` for actual checks and outstanding acceptance. Local practice,
-GitHub score artifacts, and a saved official TensorLearn result are distinct.
+- Preflight checks bounded numeric JSON independently.
+- Bug-fix compares 24 function cases against host-held expectations and reruns the
+  same student regression tests on original and submitted source in isolated workers.
+- Eleven labs submit a local `assessment.json`. The trusted grader validates exact
+  source hashes, pinned rubric/revision, criterion IDs, boolean values and source
+  quotations, then computes fixed points and critical caps.
+- Skills, evals and incident also run 59 independent candidate-code cases across
+  the three labs. Their grades combine report and functional checks equally.
+
+The local report is learner-controlled evidence. It does not authenticate the
+model, prove authorship, or mean CI observed a Claude session. Model judgment is
+probabilistic; only the contract checks and score formula are deterministic.
+
+See `VALIDATION.md` for actual checks and remaining acceptance. Live Claude tests
+were explicitly deferred. Local practice, GitHub artifacts and a saved official
+TensorLearn result are distinct.
 
 ## Immutable release
 
@@ -42,19 +53,22 @@ release **outside** the learner checkout. Its local restrictions aid the exercis
 an unmanaged user can start a different client. They do not prove human authorship.
 Candidate code runs only in the no-network, credential-free Docker worker.
 
-## AI-dependent assessments
+## Local assessment and rehearsal
 
-Do not put provider credentials in a public exercise, student fork, candidate
-process, submitted log or template record. A reusable workflow called from a fork
-does not inherit upstream repository secrets. The proposed semantic evaluators,
-fresh-session agent replays, controlled subagent traces and provider usage checks
-need an instructor-operated authenticated gateway/controller. Its provisioning,
-funding and credential are not yet configured. No keyword rubric or student-written
-trace is substituted for that assessment.
+Use `runtime/assess.py` to produce the report from frozen source files through a
+tool-free local Claude session. The authoring broker cannot write that report.
+The intent coach cannot write the intent. The instructor configuration selects
+approved full model IDs; the learner uses their normal local Claude sign-in.
 
-`isolated_checks` deliberately rejects unreleased AI behavioral assessment. Enabling
-a manifest key is not implementation. Keep such TensorLearn records as drafts with
-null grading until their real positive/negative acceptance is demonstrated.
+Other local commands rehearse recurring regressions, scoped agents, isolated hook
+probes, sanitized skills, fictional release/incident tools and bounded model stages.
+The runtime documentation lists the precise boundaries and unrun checks. Their
+traces are local evidence, not an authenticated provider ledger or a GitHub proof.
+Optional CLI budget targets are not account-wide spending caps.
+
+Never put provider credentials in exercise files, candidate workers, submitted logs,
+GitHub workflows or template records. Candidate code runs only in credential-free,
+no-network Docker workers. A reusable workflow does not inherit upstream secrets.
 
 ## Rebuilding
 
