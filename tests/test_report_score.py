@@ -64,12 +64,13 @@ class ReportTests(unittest.TestCase):
 
 
     def test_every_protected_caller_grants_oidc(self):
-        tree = ast.parse((ROOT / 'grade.py').read_text())
-        functions = [node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == 'caller']
-        self.assertEqual(len(functions), 1)
-        namespace = {}
-        exec(compile(ast.Module(body=functions, type_ignores=[]), '<caller formatter>', 'exec'), namespace)
-        for path in (ROOT / 'rubrics').glob('*.json'):
-            caller = namespace['caller'](path.stem, 'a'*40)
+        import sys
+        sys.path.insert(0, str(ROOT))
+        import grade
+        import json
+        keys = json.loads((ROOT / 'manifest.json').read_text())['exercises']
+        self.assertEqual(len(keys), 13)
+        for key in keys:
+            caller = grade.caller(key, 'a'*40)
             self.assertIn('  id-token: write\n', caller)
             self.assertIn('grade.yml@'+'a'*40, caller)
