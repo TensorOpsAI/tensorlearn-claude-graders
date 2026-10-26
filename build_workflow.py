@@ -16,7 +16,7 @@ def render():
             script=f'from pathlib import Path\nimport base64\np=Path({name!r})\np.parent.mkdir(parents=True,exist_ok=True)\nwith p.open({mode!r}) as f: f.write(base64.b64decode({encoded!r}))\n'
             staging+=f'      - name: Stage trusted {name} part {index+1}\n        shell: python\n        run: |\n'
             staging+=''.join('          '+line+'\n' for line in script.splitlines())
-    return '''name: TensorLearn workshop grader
+    yaml = '''name: TensorLearn workshop grader
 on:
   workflow_call:
     inputs:
@@ -29,6 +29,7 @@ on:
 permissions:
   contents: read
   pull-requests: read
+  id-token: write
 jobs:
   lab-grade:
     name: lab-grade
@@ -62,6 +63,14 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 '''
+
+    yaml += '''      - name: Report score to TensorLearn
+        continue-on-error: true
+        shell: python
+        run: |
+'''
+    yaml += ''.join(('          ' + line if line else '') + '\n' for line in (ROOT / 'report_score.py').read_text().splitlines())
+    return yaml
 
 if __name__=='__main__':
     path=ROOT/'.github/workflows/grade.yml';path.parent.mkdir(parents=True,exist_ok=True);path.write_text(render())
