@@ -62,6 +62,7 @@ on:
 permissions:
   contents: read
   pull-requests: read
+  id-token: write
 jobs:
   grade:
     uses: {repo}/.github/workflows/grade.yml@{grader_sha}
