@@ -1,0 +1,224 @@
+{
+  "preflight": {
+    "writeAllow": [
+      "answer.json"
+    ],
+    "writeDeny": [
+      "practice.mjs",
+      "assessment.json"
+    ],
+    "tests": {
+      "preflight.practice": [
+        "node",
+        "practice.mjs"
+      ]
+    },
+    "coach": "Help the student investigate the exercise and make only permitted changes. Run listed practice checks. These are advisory checks, not an official grade. Finish authoring before the separate explicit GitHub submission phase. Never infer a saved TensorLearn score from local output."
+  },
+  "intent": {
+    "writeAllow": [],
+    "writeDeny": [
+      "practice.mjs",
+      "assessment.json"
+    ],
+    "tests": {},
+    "coach": "You are a read-only coach. Ask clarification questions and identify gaps with quotations. Do not write, replace, or supply a ready-made intent. The student writes the file in their own editor. Do not claim the tool restrictions prove unaided human authorship."
+  },
+  "bug-fix": {
+    "writeAllow": [
+      "src/claims.mjs",
+      "tests/student/**"
+    ],
+    "writeDeny": [
+      "practice.mjs",
+      "assessment.json"
+    ],
+    "tests": {
+      "bug-fix.practice": [
+        "node",
+        "practice.mjs"
+      ]
+    },
+    "coach": "Help the student investigate the exercise and make only permitted changes. Run listed practice checks. These are advisory checks, not an official grade. Finish authoring before the separate explicit GitHub submission phase. Never infer a saved TensorLearn score from local output."
+  },
+  "recurring-regressions": {
+    "writeAllow": [
+      "**"
+    ],
+    "writeDeny": [
+      "exercise.json",
+      "practice.mjs",
+      "fixtures/**",
+      "tests/instructor/**",
+      ".github/**",
+      ".mcp.json",
+      ".claude/settings.json",
+      ".claude/settings.local.json",
+      "assessment.json"
+    ],
+    "tests": {
+      "recurring-regressions.practice": [
+        "node",
+        "practice.mjs"
+      ]
+    },
+    "coach": "Investigate why corrections recur in new sessions. Compare actual repository evidence with current requirements. Do not assume the cause. Help the student explain the evidence and demonstrate a durable correction. Practice results are advisory."
+  },
+  "subagents": {
+    "writeAllow": [
+      "agents/**",
+      "handoff.json",
+      "src/**",
+      "tests/student/**"
+    ],
+    "writeDeny": [
+      "practice.mjs",
+      "assessment.json"
+    ],
+    "tests": {
+      "subagents.practice": [
+        "node",
+        "practice.mjs"
+      ]
+    },
+    "coach": "Help the student investigate the exercise and make only permitted changes. Run listed practice checks. These are advisory checks, not an official grade. Finish authoring before the separate explicit GitHub submission phase. Never infer a saved TensorLearn score from local output."
+  },
+  "hooks": {
+    "writeAllow": [
+      "guard/**",
+      "tests/student/guard/**"
+    ],
+    "writeDeny": [
+      "practice.mjs",
+      "assessment.json"
+    ],
+    "tests": {
+      "hooks.practice": [
+        "node",
+        "practice.mjs"
+      ]
+    },
+    "coach": "Help the student investigate the exercise and make only permitted changes. Run listed practice checks. These are advisory checks, not an official grade. Finish authoring before the separate explicit GitHub submission phase. Never infer a saved TensorLearn score from local output."
+  },
+  "spec-plan": {
+    "writeAllow": [
+      "spec.md",
+      "plan.md"
+    ],
+    "writeDeny": [
+      "practice.mjs",
+      "assessment.json"
+    ],
+    "tests": {
+      "spec-plan.practice": [
+        "node",
+        "practice.mjs"
+      ]
+    },
+    "coach": "Help the student investigate the exercise and make only permitted changes. Run listed practice checks. These are advisory checks, not an official grade. Finish authoring before the separate explicit GitHub submission phase. Never infer a saved TensorLearn score from local output."
+  },
+  "skills": {
+    "writeAllow": [
+      ".claude/skills/notification-policy/**",
+      "checker/check-message.mjs"
+    ],
+    "writeDeny": [
+      "practice.mjs",
+      "assessment.json"
+    ],
+    "tests": {
+      "skills.practice": [
+        "node",
+        "practice.mjs"
+      ]
+    },
+    "coach": "Help the student investigate the exercise and make only permitted changes. Run listed practice checks. These are advisory checks, not an official grade. Finish authoring before the separate explicit GitHub submission phase. Never infer a saved TensorLearn score from local output."
+  },
+  "evals": {
+    "writeAllow": [
+      "evals/**",
+      "tests/eval/**"
+    ],
+    "writeDeny": [
+      "practice.mjs",
+      "assessment.json"
+    ],
+    "tests": {
+      "evals.practice": [
+        "node",
+        "practice.mjs"
+      ]
+    },
+    "coach": "Help the student investigate the exercise and make only permitted changes. Run listed practice checks. These are advisory checks, not an official grade. Finish authoring before the separate explicit GitHub submission phase. Never infer a saved TensorLearn score from local output."
+  },
+  "review": {
+    "writeAllow": [
+      "REVIEW.md",
+      "agents/reviewer.json"
+    ],
+    "writeDeny": [
+      "practice.mjs",
+      "assessment.json"
+    ],
+    "tests": {
+      "review.practice": [
+        "node",
+        "practice.mjs"
+      ]
+    },
+    "coach": "Help the student investigate the exercise and make only permitted changes. Run listed practice checks. These are advisory checks, not an official grade. Finish authoring before the separate explicit GitHub submission phase. Never infer a saved TensorLearn score from local output."
+  },
+  "model-routing": {
+    "writeAllow": [
+      "routing.json",
+      "handoffs/**"
+    ],
+    "writeDeny": [
+      "practice.mjs",
+      "assessment.json"
+    ],
+    "tests": {
+      "model-routing.practice": [
+        "node",
+        "practice.mjs"
+      ]
+    },
+    "coach": "Help the student investigate the exercise and make only permitted changes. Run listed practice checks. These are advisory checks, not an official grade. Finish authoring before the separate explicit GitHub submission phase. Never infer a saved TensorLearn score from local output."
+  },
+  "release": {
+    "writeAllow": [
+      "agents/**",
+      "approval-policy.json"
+    ],
+    "writeDeny": [
+      "practice.mjs",
+      "assessment.json"
+    ],
+    "tests": {
+      "release.practice": [
+        "node",
+        "practice.mjs"
+      ]
+    },
+    "coach": "Help the student investigate the exercise and make only permitted changes. Run listed practice checks. These are advisory checks, not an official grade. Finish authoring before the separate explicit GitHub submission phase. Never infer a saved TensorLearn score from local output."
+  },
+  "incident": {
+    "writeAllow": [
+      "detector/**",
+      "policy/response.json",
+      "intent.md",
+      "evals/**"
+    ],
+    "writeDeny": [
+      "practice.mjs",
+      "assessment.json"
+    ],
+    "tests": {
+      "incident.practice": [
+        "node",
+        "practice.mjs"
+      ]
+    },
+    "coach": "Help the student investigate the exercise and make only permitted changes. Run listed practice checks. These are advisory checks, not an official grade. Finish authoring before the separate explicit GitHub submission phase. Never infer a saved TensorLearn score from local output."
+  }
+}
