@@ -200,6 +200,9 @@ jobs:
           GRADER_SHA: ${{ inputs.grader-sha }}
         run: |
           import runpy
+          import sys
+          from pathlib import Path
+          sys.path.insert(0, str(Path.cwd()))
           runpy.run_path('grade.py', run_name='__main__')
       - name: Upload score
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
