@@ -49,9 +49,28 @@ def allowed_edit(path,profile):
                '.claude/settings.json','.claude/settings.local.json','runtime/**','grader/**']
     return editable(path,profile['writeAllow']) and not editable(path,protected+profile.get('writeDeny',[]))
 
-def caller(key, grader_sha, repo='TensorOpsAI/tensorlearn-claude-graders'):
+def caller(key, grader_sha, repo='TensorOpsAI/tensorlearn-claude-graders', standalone=False):
     if not re.fullmatch('[a-z][a-z0-9-]*',key) or not SHA.fullmatch(grader_sha) or not REPO.fullmatch(repo):
         raise ValueError('Invalid release identity')
+    if standalone:
+        # A one-exercise starter: the whole repository is the exercise.
+        return f'''name: Check {key} submission
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+permissions:
+  contents: read
+  pull-requests: read
+  id-token: write
+jobs:
+  grade:
+    uses: {repo}/.github/workflows/grade.yml@{grader_sha}
+    with:
+      grader-sha: {grader_sha}
+      exercise-key: {key}
+      layout: standalone
+'''
     return f'''name: Check {key}
 on:
   pull_request:
@@ -81,15 +100,22 @@ def identity(pull, repo, head, number):
     if not SHA.fullmatch(base): raise Unavailable('Missing PR base identity')
     return base
 
-def snapshot(fetch, repo, head, number, key, grader_sha, manifest, destination):
+def snapshot(fetch, repo, head, number, key, grader_sha, manifest, destination, standalone=False):
     if not REPO.fullmatch(repo) or not SHA.fullmatch(head) or not SHA.fullmatch(grader_sha):
         raise Unavailable('Invalid run identity')
     profile = manifest['exercises'][key]
-    prefix = f'exercises/{key}/'
     before = identity(fetch(f'repos/{repo}/pulls/{number}'), repo,head,number)
-    expected = dict(manifest['files'])
-    for other in manifest['exercises']:
-        expected[f'.github/workflows/{other}.yml'] = blob_sha(caller(other,grader_sha).encode())
+    if standalone:
+        prefix = ''
+        expected = dict(manifest['standalone'][key])
+        # A release published from another repository names it, so starters call that copy.
+        repo_name = manifest.get('graderRepo','TensorOpsAI/tensorlearn-claude-graders')
+        expected['.github/workflows/grade.yml'] = blob_sha(caller(key,grader_sha,repo_name,standalone=True).encode())
+    else:
+        prefix = f'exercises/{key}/'
+        expected = dict(manifest['files'])
+        for other in manifest['exercises']:
+            expected[f'.github/workflows/{other}.yml'] = blob_sha(caller(other,grader_sha).encode())
     # A valid final tree alone does not establish a valid PR diff: a learner could
     # alter main, then restore protected files in the PR. Freeze the complete base
     # tree to the release's hashes, including generated pinned callers. Comparing
@@ -191,6 +217,27 @@ def isolated_checks(workspace,key,image):
     # Never accept candidate-produced pass/fail logs for missing AI assessments.
     raise Unavailable('Behavioral assessment is not released for this lab')
 
+def functional_checks(workspace,key,image):
+    import artifact_checks
+    try:
+        return artifact_checks.assess(workspace,key,image)
+    except artifact_checks.Unavailable as error:
+        raise Unavailable(str(error)) from error
+
+def fixed_rule_checks(workspace,key,image):
+    """Standalone starters: deterministic checks only, no local AI report."""
+    if key=='preflight': return arithmetic(workspace),None
+    if key=='bug-fix': return isolated_checks(workspace,key,image),None
+    if key in ('skills','evals','incident'):
+        import artifact_checks
+        checks=functional_checks(workspace,key,image)
+        critical=set(artifact_checks.critical_case_ids(key))
+        weighted=100*sum(c['passed'] for c in checks)//len(checks)
+        if any(c['id'] in critical and not c['passed'] for c in checks): weighted=min(weighted,25)
+        return checks,weighted
+    import fixed_rules
+    return fixed_rules.assess(workspace,key,image)
+
 
 def score(key,head,grader_sha,checks,invalid=False,weighted_points=None):
     maximum=10 if key=='preflight' else 100
@@ -213,26 +260,27 @@ def score(key,head,grader_sha,checks,invalid=False,weighted_points=None):
 def main():
     if os.environ.get('SUBMISSION_EVENT')!='pull_request': raise Unavailable('Only PR events accepted')
     key=os.environ['EXERCISE_KEY']; head=os.environ['SUBMISSION_SHA']; grader_sha=os.environ['GRADER_SHA']
+    standalone=os.environ.get('LAB_LAYOUT','monorepo')=='standalone'
     manifest=json.loads((ROOT/'manifest.json').read_text())
     if key not in manifest['exercises']: raise Unavailable('Unknown exercise')
+    if standalone and key not in manifest.get('standalone',{}): raise Unavailable('No standalone starter for this exercise')
     # Release eligibility is instructor-owned. No partial stand-in for missing AI behavior.
     if key not in manifest['releaseReady']: raise Unavailable('This template is a draft; assessment is not released')
     with tempfile.TemporaryDirectory() as temp:
         workspace=Path(temp); workspace.chmod(0o755)
         try:
-            profile=snapshot(api,os.environ['SUBMISSION_REPO'],head,int(os.environ['SUBMISSION_PR']),key,grader_sha,manifest,workspace)
+            profile=snapshot(api,os.environ['SUBMISSION_REPO'],head,int(os.environ['SUBMISSION_PR']),key,grader_sha,manifest,workspace,standalone)
             weighted=None
-            if key in manifest.get('localAIReports',[]):
+            if standalone:
+                checks,weighted=fixed_rule_checks(workspace,key,manifest['workerImage'])
+            elif key in manifest.get('localAIReports',[]):
                 import report_assessment
                 try:
                     rubric_bytes=(ROOT/'rubrics'/f'{key}.json').read_bytes()
                     checks,weighted=report_assessment.assess(workspace,key,grader_sha,rubric_bytes)
                     if key in ('skills','evals','incident'):
                         import artifact_checks
-                        try:
-                            functional=artifact_checks.assess(workspace,key,manifest['workerImage'])
-                        except artifact_checks.Unavailable as error:
-                            raise Unavailable(str(error)) from error
+                        functional=functional_checks(workspace,key,manifest['workerImage'])
                         ceiling=100
                         outcomes={c['id']:c['passed'] for c in checks}
                         for criterion in json.loads(rubric_bytes)['criteria']:

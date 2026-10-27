@@ -38,9 +38,52 @@ An accepted PR stays inside the learner's fork, targets its unchanged starter
 starter baseline. Forks can retain separate solution branches for separate labs.
 Every other exercise and every workflow must remain unchanged.
 
+## Standalone starters
+
+Each exercise can also ship as its own repository, `TensorOpsAI/tensorlearn-<key>-lab`,
+with the exercise directory at the repository root. Learners then fork one repository
+per TensorLearn lab, so several labs can be open at once. The starter's caller passes
+`layout: standalone`, and these submissions are graded by fixed rules only
+(`fixed_rules.py`): no `assessment.json`, no local AI step.
+
+- preflight and bug-fix keep their existing checks.
+- skills, evals and incident score their functional cases alone (critical cases cap at 25).
+- hooks, recurring-regressions and subagents run published cases in the Docker worker
+  (plus student-test differentials for the first two).
+- intent, review, release, spec-plan, model-routing and subagents check documents and
+  JSON as data. intent, review and release add a short graded block to the task
+  (`fixed_rules.TASK_ADDITIONS`); the others use their existing files and tables.
+- Reference solutions are kept **outside** this public repository (learners can read the
+  grader) in a private checkout; set `TENSORLEARN_SOLUTIONS` to it, default
+  `../tensorlearn-claude-lab-solutions`. Each must score 100 and each untouched starter at most 25.
+
+`python3 build_standalone.py --starter <labs checkout>` freezes the generated starter
+files into `manifest.json` (`standalone`). After publishing the grader commit, add
+`--out <dir> --grader-sha <sha>` to write the starter repositories with pinned callers.
+The TensorLearn lab uses grader job `lab-grade`, artifact `lab-score` and the exercise
+key as its folder name.
+
+## Checking published templates
+
+Three checks, from cheapest to closest to a real learner:
+
+1. `RUN_DOCKER=1 python3 -m unittest discover -s tests`: every private reference solution
+   goes through the real standalone path (PR snapshot of the generated
+   starter, fixed rules, `score.json`) and must score full marks; untouched starters score at
+   most a quarter; editing a protected file is invalid.
+2. `python3 tools/verify_templates.py code-lab-templates.json`: compares each TensorLearn
+   template (exported with `tools/export-templates.js`) with GitHub: starter commit, caller
+   pin and exercise key, grader job/artifact, and starter files against the grader manifest.
+3. `python3 tools/canary.py code-lab-templates.json`: the learner GitHub flow for real. It
+   forks each starter, keeps one PR with the reference solution open inside the fork, pushes a
+   new commit each run, waits for the grader run and checks the uploaded `score.json`. TensorLearn's own `/load` and `/submit`
+   are shared by every lab; rehearse them once with a learner account.
+
 ## Local checks
 
-Python 3.11+:
+Python 3.11+. Docker tests need the pinned worker image preloaded; with Colima, point
+`TMPDIR` inside your home folder so the worker can mount it. `RUN_DOCKER=1` enables
+the artifact-check Docker tests.
 
 ```
 python3 -m unittest discover -s tests -v
